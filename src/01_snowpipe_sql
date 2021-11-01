@@ -1,0 +1,66 @@
+use role sysadmin;
+use schema demo.telco;
+
+-- Create a storage integration with the cloud provider storage
+create storage integration if not exists strg_int_telco
+   type = external_stage
+   storage_provider = s3
+   enabled = true
+   storage_aws_role_arn = 'arn:aws:iam::<account>:role/<role name>'
+   storage_allowed_locations = ('s3://<bucket name>/<folder name>');
+
+
+-- get the SNOWFLAKE IAM user and External ID and update the 
+desc INTEGRATION strg_int_telco;
+
+
+-- Create a external stage to point it to cloud storage
+create stage if not exists telco_data_stream
+  url = 's3://<bucket name>/<folder name>/'
+  storage_integration = strg_int_telco
+  file_format=(type=parquet);
+
+ls @telco_data_stream;
+
+alter pipe TELCO_PIPE set pipe_execution_paused = false;
+
+-- List the files in the S3 bucket
+
+LS @telco_data_stream/upload/;
+
+-- Create snowpipe for auto ingestion
+create pipe if not exists 
+    demo.telco.telco_pipe 
+    auto_ingest=true 
+    as 
+    copy into 
+        demo.telco.raw_parquet 
+    from 
+        '@telco_data_stream/upload'
+        file_format = (type = 'parquet')
+        MATCH_BY_COLUMN_NAME = CASE_SENSITIVE;
+ ;
+
+--desc pipe telco_pipe;
+
+select system$pipe_status('telco_pipe');
+--alter pipe telco_pipe refresh;
+
+
+--alter pipe TELCO_PIPE set pipe_execution_paused = true;
+alter pipe TELCO_PIPE set pipe_execution_paused = false;
+
+--desc pipe telco_pipe;
+
+select system$pipe_status('telco_pipe');
+-- Snowpipe keeps track of the processed files here
+
+select *
+from table(information_schema.copy_history(
+  table_name=>'demo.telco.raw_parquet',
+  start_time=>dateadd(hour, -1, current_timestamp))) order by last_load_time desc;
+
+-- check if the data is uploaded into raw_parquet table
+select * from raw_parquet;
+
+ls @telco_data_stream;
