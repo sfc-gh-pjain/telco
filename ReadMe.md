@@ -22,7 +22,7 @@ We are going to built an end to end data pipeline to built a BI, anaylytics data
 6. Serverless tasks. Update features store as an example
 
 ![Reference Architecture of the Demo]
-<img src="/images/ref_architecure.png" />)
+<img src="/images/ref_architecure.png" />
 
 # Setup
 
