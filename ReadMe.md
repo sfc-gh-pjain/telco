@@ -1,6 +1,6 @@
 # Building pipeline for Customer Churn analysis
 
-![Reference Architecture of the Demo]
+## Reference Architecture of the Demo
 <img src="/images/ref_architecure.png" />
 
 <b>
