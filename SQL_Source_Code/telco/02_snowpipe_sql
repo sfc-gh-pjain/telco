@@ -21,14 +21,6 @@ CREATE STAGE IF NOT EXISTS TELCO_DATA_STREAM
   STORAGE_INTEGRATION = STRG_INT_TELCO
   FILE_FORMAT=(TYPE=PARQUET);
 
-LS @telco_data_stream;
-
-ALTER PIPE TELCO_PIPE SET PIPE_EXECUTION_PAUSED = FALSE;
-
--- List the files in the S3 bucket
-
-LS @telco_data_stream/upload/;
-
 -- Create snowpipe for auto ingestion
 CREATE PIPE IF NOT EXISTS 
     DEMO.TELCO.TELCO_PIPE 
@@ -52,8 +44,23 @@ SELECT SYSTEM$PIPE_STATUS('TELCO_PIPE');
 --alter pipe telco_pipe refresh;
 
 
---alter pipe TELCO_PIPE set pipe_execution_paused = true;
-ALTER PIPE TELCO_PIPE SET PIPE_EXECUTION_PAUSED = FALSE;
+LS @telco_data_stream/upload;
+
+-- Start Streaming simulation ---
+
+alter pipe TELCO_PIPE set pipe_execution_paused = true;
+
+copy into @telco_data_stream/upload/ from "DEMO"."PUBLIC"."RAW_PARQUET_TELCO"
+    file_format = (type = 'parquet')
+    header = true
+    include_query_id=true
+; 
+
+alter pipe TELCO_PIPE set pipe_execution_paused = false;
+
+-- List the files in the S3 bucket
+
+LS @telco_data_stream/upload/;
 
 --desc pipe telco_pipe;
 
