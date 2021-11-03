@@ -1,0 +1,71 @@
+USE ROLE SYSADMIN;
+USE SCHEMA DEMO.TELCO;
+USE WAREHOUSE LAB_L_WH;
+
+-- Create a storage integration with the cloud provider storage
+CREATE STORAGE INTEGRATION IF NOT EXISTS STRG_INT_TELCO
+   TYPE = EXTERNAL_STAGE
+   STORAGE_PROVIDER = S3
+   ENABLED = TRUE
+   STORAGE_AWS_ROLE_ARN = 'arn:aws:iam::<account>:role/<role name>'
+   STORAGE_ALLOWED_LOCATIONS = ('s3://<bucket name>/<folder name>');
+
+
+-- get the SNOWFLAKE IAM user and External ID and update the AWS IAM role trust relationship
+DESC INTEGRATION STRG_INT_TELCO;
+
+
+-- Create a external stage to point it to cloud storage
+CREATE STAGE IF NOT EXISTS TELCO_DATA_STREAM
+  URL = 's3://<bucket name>/<folder name>/'
+  STORAGE_INTEGRATION = STRG_INT_TELCO
+  FILE_FORMAT=(TYPE=PARQUET);
+
+LS @telco_data_stream;
+
+ALTER PIPE TELCO_PIPE SET PIPE_EXECUTION_PAUSED = FALSE;
+
+-- List the files in the S3 bucket
+
+LS @telco_data_stream/upload/;
+
+-- Create snowpipe for auto ingestion
+CREATE PIPE IF NOT EXISTS 
+    DEMO.TELCO.TELCO_PIPE 
+    AUTO_INGEST=TRUE 
+    AS 
+    COPY INTO 
+        DEMO.TELCO.RAW_PARQUET 
+    FROM 
+        '@telco_data_stream/upload'
+        FILE_FORMAT = (TYPE = 'PARQUET')
+        MATCH_BY_COLUMN_NAME = CASE_SENSITIVE;
+ ;
+
+-- SNOWPIPE auto ingest requires you to update the S3 bucket settings with the 
+-- snowpipe sqs ARN, so that snowpipe can be notified once new data is available
+-- https://docs.snowflake.com/en/user-guide/data-load-snowpipe-auto-s3.html
+-- show pipes;
+DESC PIPE TELCO_PIPE;
+
+SELECT SYSTEM$PIPE_STATUS('TELCO_PIPE');
+--alter pipe telco_pipe refresh;
+
+
+--alter pipe TELCO_PIPE set pipe_execution_paused = true;
+ALTER PIPE TELCO_PIPE SET PIPE_EXECUTION_PAUSED = FALSE;
+
+--desc pipe telco_pipe;
+
+SELECT SYSTEM$PIPE_STATUS('TELCO_PIPE');
+-- Snowpipe keeps track of the processed files here
+
+SELECT *
+FROM TABLE(INFORMATION_SCHEMA.COPY_HISTORY(
+  TABLE_NAME=>'DEMO.TELCO.RAW_PARQUET',
+  START_TIME=>DATEADD(HOUR, -1, CURRENT_TIMESTAMP))) ORDER BY LAST_LOAD_TIME DESC;
+
+-- check if the data is uploaded into raw_parquet table
+SELECT * FROM RAW_PARQUET;
+
+LS @telco_data_stream;
