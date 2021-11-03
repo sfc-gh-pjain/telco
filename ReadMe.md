@@ -1,6 +1,10 @@
 # Building pipeline for Customer Churn analysis
+
+![Reference Architecture of the Demo]
+<img src="/images/ref_architecure.png" />
+
 <b>
-Here we are a data engineering team at a Telecom company and we have some customer data that our data science team would need.  As the data engineering team here, we are responsible to build a feature store for the data science team. </b>
+As a data engineering team member at a Telecom company, we have been tasked to build an end to end data pipeline in snowflake to support customer churn analysis by data science team. For this demo we have some customer data that our data science team would need.  We are responsible to build a feature store for the data science team. </b>
 
 
 # Challenges
@@ -20,9 +24,6 @@ We are going to built an end to end data pipeline to built a BI, anaylytics data
 4. Unstructured data support
 5. Snowpark for Transformations and Data engineering
 6. Serverless tasks. Update features store as an example
-
-![Reference Architecture of the Demo]
-<img src="/images/ref_architecure.png" />
 
 # Setup
 
