@@ -1,0 +1,108 @@
+[Errno 2] No such file or directory: './SQL_Source_Code/telco/snowsql_upload.sql'
+If the error message is unclear, enable logging using -o log_level=DEBUG and see the log to find out the cause. Contact support for further help.
+[Errno 2] No such file or directory: 'SQL_Source_Code/telco/snowsql_upload.sql'
+If the error message is unclear, enable logging using -o log_level=DEBUG and see the log to find out the cause. Contact support for further help.
++----------------------------------+
+| status                           |
+|----------------------------------|
+| Statement executed successfully. |
++----------------------------------+
++-------------------------------------------+
+| status                                    |
+|-------------------------------------------|
+| DEMO already exists, statement succeeded. |
++-------------------------------------------+
+090105 (22000): Cannot perform CREATE SCHEMA. This session does not have a current database. Call 'USE DATABASE', or use a qualified name.
++----------------------------------+
+| status                           |
+|----------------------------------|
+| Statement executed successfully. |
++----------------------------------+
++-----------------------------------------------+
+| status                                        |
+|-----------------------------------------------|
+| LAB_L_WH already exists, statement succeeded. |
++-----------------------------------------------+
++----------------------------------+
+| status                           |
+|----------------------------------|
+| Statement executed successfully. |
++----------------------------------+
++--------------------------------------------------+
+| status                                           |
+|--------------------------------------------------|
+| DATA_UPLOAD already exists, statement succeeded. |
++--------------------------------------------------+
++-------------------------------------------------------------------+
+| status                                                            |
+|-------------------------------------------------------------------|
+| UNSTRUCTURED_DEPENDENCY_JARS already exists, statement succeeded. |
++-------------------------------------------------------------------+
++-----------------------------------------------------------------+
+| status                                                          |
+|-----------------------------------------------------------------|
+| UNSTRUCTURED_CUSTOMER_DATA already exists, statement succeeded. |
++-----------------------------------------------------------------+
+001003 (42000): SQL compilation error:
+syntax error line 1 at position 18 unexpected '<'.
+syntax error line 1 at position 27 unexpected '>'.
+syntax error line 1 at position 34 unexpected '/'.
+syntax error line 1 at position 39 unexpected '/'.
+syntax error line 1 at position 50 unexpected '.'.
+syntax error line 1 at position 55 unexpected '@data_upload'.
+001003 (42000): SQL compilation error:
+syntax error line 1 at position 18 unexpected '<'.
+syntax error line 1 at position 27 unexpected '>'.
+syntax error line 1 at position 34 unexpected '/'.
+syntax error line 1 at position 39 unexpected '/'.
+syntax error line 1 at position 56 unexpected '.'.
+syntax error line 1 at position 65 unexpected '@data_upload'.
+001003 (42000): SQL compilation error:
+syntax error line 1 at position 18 unexpected '<'.
+syntax error line 1 at position 27 unexpected '>'.
+syntax error line 1 at position 34 unexpected '/'.
+syntax error line 1 at position 39 unexpected '/'.
+syntax error line 1 at position 49 unexpected '.'.
+syntax error line 1 at position 54 unexpected '@unstructured_customer_data'.
+001003 (42000): SQL compilation error:
+syntax error line 1 at position 18 unexpected '<'.
+syntax error line 1 at position 27 unexpected '>'.
+syntax error line 1 at position 34 unexpected '/'.
+syntax error line 1 at position 39 unexpected '/'.
+syntax error line 1 at position 49 unexpected '.'.
+syntax error line 1 at position 54 unexpected '@unstructured_customer_data'.
+001003 (42000): SQL compilation error:
+syntax error line 1 at position 18 unexpected '<'.
+syntax error line 1 at position 27 unexpected '>'.
+syntax error line 1 at position 34 unexpected '/'.
+syntax error line 1 at position 39 unexpected '/'.
+syntax error line 1 at position 56 unexpected '.'.
+syntax error line 1 at position 61 unexpected '@unstructured_dependency_jars'.
+001003 (42000): SQL compilation error:
+syntax error line 1 at position 18 unexpected '<'.
+syntax error line 1 at position 27 unexpected '>'.
+syntax error line 1 at position 34 unexpected '/'.
+syntax error line 1 at position 39 unexpected '/'.
+syntax error line 1 at position 44 unexpected '-'.
+syntax error line 1 at position 48 unexpected '-'.
+syntax error line 1 at position 52 unexpected '.0'.
++--------------------------------------------------------+
+| status                                                 |
+|--------------------------------------------------------|
+| RAW_PARQUET_TELCO already exists, statement succeeded. |
++--------------------------------------------------------+
++-------------------------------------------------------+
+| status                                                |
+|-------------------------------------------------------|
+| TELCO_CSV_FORMAT already exists, statement succeeded. |
++-------------------------------------------------------+
++----------------------------------+
+| status                           |
+|----------------------------------|
+| Statement executed successfully. |
++----------------------------------+
++-------------------------------+--------+-------------+-------------+-------------+-------------+-------------+------------------+-----------------------+-------------------------+
+| file                          | status | rows_parsed | rows_loaded | error_limit | errors_seen | first_error | first_error_line | first_error_character | first_error_column_name |
+|-------------------------------+--------+-------------+-------------+-------------+-------------+-------------+------------------+-----------------------+-------------------------|
+| data_upload/telco_data.csv.gz | LOADED |      100000 |      100000 |           1 |           0 | NULL        |             NULL |                  NULL | NULL                    |
++-------------------------------+--------+-------------+-------------+-------------+-------------+-------------+------------------+-----------------------+-------------------------+

@@ -1,6 +1,6 @@
 USE ROLE SYSADMIN;
 CREATE DATABASE IF NOT EXISTS DEMO;
-CREATE SCHEMA IF NOT EXISTS TELCO;
+CREATE SCHEMA IF NOT EXISTS DEMO.TELCO;
 USE SCHEMA DEMO.TELCO;
 
 CREATE WAREHOUSE IF NOT EXISTS LAB_L_WH 
@@ -22,8 +22,8 @@ CREATE STAGE IF NOT EXISTS unstructured_customer_data;
 -- Update the location of the files as per your directory
 PUT file:///Users/<USERNAME>/telco/data/telco_data.csv @data_upload overwrite=true;
 PUT file:///Users/<USERNAME>/telco/data/schema_detection.parquet @data_upload overwrite=true;
-PUT file:///Users/<USERNAME>/telco/data/001_email.csv @unstructured_customer_data auto_compress = false overwrite=true;
-PUT file:///Users/<USERNAME>/telco/data/002_email.csv @unstructured_customer_data auto_compress = false overwrite=true;
+PUT file:///Users/<USERNAME>/telco/data/001_email.eml @unstructured_customer_data auto_compress = false overwrite=true;
+PUT file:///Users/<USERNAME>/telco/data/002_email.eml @unstructured_customer_data auto_compress = false overwrite=true;
 PUT file:///Users/<USERNAME>/telco/data/LogEmailResponse.jar @unstructured_dependency_jars auto_compress = false overwrite=true;
 PUT file:///Users/<USERNAME>/telco/data/tika-app-2.0.0.jar @unstructured_dependency_jars auto_compress = false overwrite=true;
 
@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS PUBLIC.RAW_PARQUET_TELCO (
 	"ZIP CODE" VARCHAR(16777216)
 );    
 
-CREATE FILE FORMAT IF NOT EXISTS DEMO.PUBLIC.TELCO_CSV_FORMAT 
+CREATE FILE FORMAT IF NOT EXISTS PUBLIC.TELCO_CSV_FORMAT 
     TYPE = 'CSV' COMPRESSION = 'AUTO' FIELD_DELIMITER = ',' 
     RECORD_DELIMITER = '\n' SKIP_HEADER = 1 
     FIELD_OPTIONALLY_ENCLOSED_BY = '\042' 
