@@ -27,4 +27,6 @@ We are going to built an end to end data pipeline to built a BI, anaylytics data
 
 # Setup
 
-Setup steps are documented in the <href url='https://github.com/sfc-gh-pjain/telco/blob/main/How_to_setup_demo.md'> setup here </href> file
+Setup steps are documented in the [setup document here]
+
+[setup document here]: https://github.com/sfc-gh-pjain/telco/blob/main/How_to_setup_demo.md

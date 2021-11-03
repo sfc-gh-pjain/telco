@@ -8,8 +8,11 @@ There are two pieces of this demo. One that needs to be run on the snowflake wor
 
 1. Run the environment setup SQL in worksheet in your demo env. You can also use the "snowsql_upload.sql" with the snowsql client as:
 
-__cd <path to telco parent directory>__
-__snowsql -c <conn_name> -f ./SQL_Source_Code/snowsql_upload.sql -o output_file=/SQL_Source_Code/snowsql_upload.out__
+```
+$ cd <path to telco parent directory>__
+$ snowsql -c <conn_name> -f ./SQL_Source_Code/snowsql_upload.sql -o output_file=/SQL_Source_Code/snowsql_upload.out__
+
+```
 
 2. Upload data and jar files require for the demo either using PUT command or the snowpark setup jupyter notebook. Both options will yield same results. (or update and use the snowsql_upload.sql with snowsql client)
 3. Load the raw data into different schema into RAW_PARQUET_TELCO table. This will help us simulate the data feed from S3 bucket through SNOWPIPE auto ingest
