@@ -27,4 +27,4 @@ We are going to built an end to end data pipeline to built a BI, anaylytics data
 
 # Setup
 
-Setup steps are in the "How_to_setup_demo.md" file
+Setup steps are documented in the https://github.com/sfc-gh-pjain/telco/blob/main/How_to_setup_demo.md file
