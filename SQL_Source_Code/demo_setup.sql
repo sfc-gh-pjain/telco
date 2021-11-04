@@ -89,3 +89,105 @@ COPY INTO PUBLIC.RAW_PARQUET_TELCO from @data_upload/telco_data.csv.gz
 FILE_FORMAT  = (FORMAT_NAME = 'PUBLIC.TELCO_CSV_FORMAT')
 ;  
 
+CREATE OR REPLACE PROCEDURE "ONEHOTENCSQL"("DBNAME" VARCHAR(16777216), "SCHNAME" VARCHAR(16777216), "TBLNAME" VARCHAR(16777216), "COLNAME" VARCHAR(16777216))
+RETURNS VARCHAR(16777216)
+LANGUAGE JAVASCRIPT
+STRICT
+EXECUTE AS OWNER
+AS '
+    // Set context
+  var tblName = DBNAME + "." + SCHNAME + "." + TBLNAME;
+  var msg = "Info: OneHot encoding for column " + COLNAME + " completed";
+  
+  // list distinct column values
+  var listSql = "select distinct " + COLNAME + " from " + tblName + " ;" ;
+  var listDistinct = snowflake.execute({ sqlText: listSql });
+  var counter = 0 ;
+  
+  while(listDistinct.next())
+  {
+      var col = listDistinct.getColumnValue(1);
+      var colName = COLNAME + "_" + col.replace(/\\((.*?)\\)/g,'''').replace(/ /g,'''');
+
+      //add encoded col
+      var addColSql = "alter table " + tblName + " add column " + colName + " number;" ;
+      try 
+      {
+          var addCol = snowflake.execute({ sqlText: addColSql });
+          counter += 1;
+      }
+      catch(err)
+      {
+          msg += " \\n Info: Column ''" + colName + "'' already exists ";
+ 
+      }
+
+      //update encoded col
+      var updColSql = "update " + tblName + " set " + colName + "= (case lower(" + COLNAME + ") when lower(''" + col +"'') then 1 else 0 end);";
+
+      try 
+      {
+          var updCol = snowflake.execute({ sqlText: updColSql });
+          counter += 1;
+      }
+      catch(err)
+      {
+          msg += " \\n Info: columns updated: " + counter + " /\\n Warning: " + err ;
+      }
+  }
+
+    return msg;
+
+';
+
+CREATE OR REPLACE PROCEDURE "ORDINALENCSQL"("DBNAME" VARCHAR(16777216), "SCHNAME" VARCHAR(16777216), "TBLNAME" VARCHAR(16777216), "COLNAME" VARCHAR(16777216))
+RETURNS VARCHAR(16777216)
+LANGUAGE JAVASCRIPT
+STRICT
+EXECUTE AS OWNER
+AS '
+  var counter = 0 ;
+  var msg = "Ordinal Encoding completed Successfully ";
+    // Set context
+  var tblName = DBNAME + "." + SCHNAME + "." + TBLNAME;
+
+  // Create new ordinal encoding column
+  var colName = COLNAME + "_ordinal";
+
+  //add encoded col
+  var addColSql = "alter table " + tblName + " add column " + colName + " number;" ;
+  try 
+  {
+      var addCol = snowflake.execute({ sqlText: addColSql });
+  }
+  catch(err)
+  {
+      counter = 0;
+      msg += " , Info: Column ''" + colName + "'' already exists ";
+  }
+
+  // list distinct column values
+  var listSql = "select distinct "+ COLNAME + " from " + tblName + " ;" ;
+  var listDistinct = snowflake.execute({ sqlText: listSql });
+  
+  while(listDistinct.next())
+  {
+      var col = listDistinct.getColumnValue(1);
+      counter += 1;
+      
+      //update ordinal encoded col
+      var updColSql = "update " + tblName + " set " + colName + " = " + counter + " where " + COLNAME + " = ''" + col +"'' ;";
+
+      try 
+      {
+          var updCol = snowflake.execute({ sqlText: updColSql });
+      }
+      catch(err)
+      {
+          msg = "Warning: " + updColSql + " : " + err;
+      }
+  }
+
+    return msg;
+
+';
