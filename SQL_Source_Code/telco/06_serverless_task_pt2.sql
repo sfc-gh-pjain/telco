@@ -1,7 +1,9 @@
-use role sysadmin;
-use schema demo.telco;
-use warehouse lab_l_wh;
+USE ROLE SYSADMIN;
+USE SCHEMA DEMO.TELCO;
+USE WAREHOUSE LAB_L_WH;
 
+CREATE OR REPLACE TABLE FEATURE_STORE AS SELECT * FROM SERVICES;
+SELECT * FROM FEATURE_STORE;
 
 create or replace task task_update_feature_store
 schedule = '1 minute'
@@ -13,8 +15,8 @@ call demo.telco.ordinalEncSQL('DEMO','TELCO','FEATURE_STORE','techsupport');
 show tasks;
 
 -- Pause or Resume tasks
-alter task task_update_feature_store resume;
-alter task task_update_feature_store suspend;
+ALTER TASK TASK_UPDATE_FEATURE_STORE RESUME;
+ALTER TASK TASK_UPDATE_FEATURE_STORE SUSPEND;
 
 -- Check Task status
 select *
@@ -24,7 +26,7 @@ select *
     task_name=>'task_update_feature_store'));
 
 -- Check final output
-select * from feature_store;
+SELECT * FROM FEATURE_STORE;
 SELECT * FROM FEATURE_METADATA;
 
 
