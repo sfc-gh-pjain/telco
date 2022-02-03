@@ -12,7 +12,7 @@ COMMENT = 'Using serverless task to manage and update feature store'
 AS 
 call demo.telco.ordinalEncSQL('DEMO','TELCO','FEATURE_STORE','techsupport');
 
-show tasks;
+SHOW TASKS;
 
 -- Pause or Resume tasks
 ALTER TASK TASK_UPDATE_FEATURE_STORE RESUME;
@@ -29,4 +29,6 @@ select *
 SELECT * FROM FEATURE_STORE;
 SELECT * FROM FEATURE_METADATA;
 
-
+-- At the end of the lab remember to stop your task from running (otherwise it will continue to execute every minute)
+ALTER TASK TASK_UPDATE_FEATURE_STORE SUSPEND;
+SHOW TASKS; --to verify the state is suspended
